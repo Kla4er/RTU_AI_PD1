@@ -52,7 +52,7 @@ UserTextRect = UserText.get_rect(topleft=(UserStepRect.x + 40, UserStepRect.y + 
 stick = pygame.image.load('img/billiard.png')
 stick = pygame.transform.scale(stick, (50, 50))
 
-
+# Print current game condition - N and count of stick taken by each player
 def printres(N, cnt1, cnt2):
     Score = SmallFont.render('Current N: ' + str(N), False, "Black")
     ScoreRect = Score.get_rect(topleft=((SCREEN_W - Score.get_width()) / 2, 130))
@@ -69,7 +69,7 @@ def printres(N, cnt1, cnt2):
 IsNewGame = True
 ValidBlock = False
 
-# Ititialization values
+# Initialization values
 
 UserScore = 0
 AIScore = 0
@@ -86,10 +86,12 @@ while True:
     screen.fill(color)
     screen.blit(Header, HeaderRect)
 
+    # New Game screen
     if IsNewGame:
         color = 'Black'
         mouse = pygame.mouse.get_pos()
         keys = pygame.key.get_pressed()
+
         # Draw
         screen.blit(NewGame, NewGameRect)
         Score = SmallFont.render('User ' + str(UserScore) + ': ' + str(AIScore) + ' AI', False, 'White')
@@ -103,6 +105,7 @@ while True:
         if ValidBlock:
             screen.blit(ValidText, ValidTextRect)
 
+        # User actions
         if NewGameRect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             ShowSteps = True
             ValidBlock = False
@@ -129,7 +132,9 @@ while True:
             except Exception:
                 ValidBlock = True
     else:
-        # End of game
+        # Game Screen
+
+        # End game condition
         if N <= 0:
             if AIFirst:
                 UserScore += 1
@@ -150,11 +155,12 @@ while True:
 
         # Step logic
         if AIFirst:
-            curK = Ndepth.getnewK(N, K)
-            #curK = FullSearch.getnewK(N, K)
+            curK = Ndepth.getnewK(N, K)  # Algorithm "Pārlūkošana uz priekšu pār ngājieniem"
+            #curK = FullSearch.getnewK(N, K) # Alhorithm "Minimaksa" with full detour of the graph
             AICount += curK
             N -= curK
         else:
+            # User step - input "K" and decrease number of the sticks
             while True:
                 try:
                     if ValidBlock:
